@@ -29,8 +29,10 @@ public class Car {
     @Column(length = 65535)
     private String başlıklar;
 
-    @Column(length = 65535)
-    private String görseller;
+    @ElementCollection
+    @CollectionTable(name = "car_images", joinColumns = @JoinColumn(name = "car_id"))
+    @Column(name = "image_url")
+    private List<String> görseller; // Görseller URL'leri bir liste olarak saklanacak
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference

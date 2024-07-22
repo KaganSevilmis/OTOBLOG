@@ -52,7 +52,11 @@ public class CarController {
             oldCar.setIçerik(newCar.getIçerik());
             oldCar.setCreateDate(newCar.getCreateDate());
             oldCar.setBaşlıklar(newCar.getBaşlıklar());
-            oldCar.setGörseller(newCar.getGörseller());
+
+            // Görselleri güncelle
+            if (newCar.getGörseller() != null) {
+                oldCar.setGörseller(newCar.getGörseller());
+            }
                   // Sosyal medyayı güncelle
             if (!oldCar.getSocialMediaList().isEmpty()) {
                 List<SocialMedia> updatedSocialMediaList = new ArrayList<>();
