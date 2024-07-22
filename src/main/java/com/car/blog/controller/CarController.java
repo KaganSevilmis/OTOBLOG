@@ -80,7 +80,7 @@ public class CarController {
             // Yorumları güncelle
             if (!oldCar.getYorumlar().isEmpty()) {
                 List<Yorumlar> updatedYorumlarList = new ArrayList<>();
-                for (Yorumlar newYorum : oldCar.getYorumlar()) {
+                for (Yorumlar newYorum : newCar.getYorumlar()) {
                     Yorumlar yorumlar;
                     if (newYorum.getId() != null) {
                         yorumlar = yorumlarService.getYorumById(newYorum.getId());
