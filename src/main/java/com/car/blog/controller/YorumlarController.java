@@ -46,57 +46,36 @@ public class YorumlarController {
     public ResponseEntity<Yorumlar> updateCar(@PathVariable Integer id, @RequestBody Yorumlar newYorumlar) {
         Yorumlar oldYorum = yorumlarService.getYorumById(id);
         if (oldYorum != null) {
-//            oldYorum.setIçerik(newYorumlar.getIçerik());
-//            oldYorum.setCreateDate(newYorumlar.getCreateDate());
-//            oldYorum.setBaşlıklar(newYorumlar.getBaşlıklar());
-//            oldYorum.setGörseller(newYorumlar.getGörseller());
-//
-//            // SocialMedia'nın null değerini kontrol et
-//            if (newYorumlar.getSocialMedia() != null) {
-//                SocialMedia socialMedia = socialMediaService.getSocialMediaById(id);
-//                socialMedia.setSocialMediaLogo(newYorumlar.getSocialMedia().getSocialMediaLogo());
-//                socialMedia.setSocialMediaName(newYorumlar.getSocialMedia().getSocialMediaName());
-//                socialMedia.setSocialMediaLink(newYorumlar.getSocialMedia().getSocialMediaLink());
-//                socialMediaService.CreateSocialMedia(socialMedia);
-//                oldYorum.setSocialMedia(socialMedia);
-            }
+           oldYorum.setYorumlarIsim(newYorumlar.getYorumlarIsim());
+            oldYorum.setYorumlarYorum(newYorumlar.getYorumlarYorum());
+            oldYorum.setYorumlarEmail(newYorumlar.getYorumlarYorum());
+
 
             // Yorumlar'ın null değerini kontrol et
-//            if (newYorumlar.getYorumlar() != null) {
-//                List<Yorumlar> updatedYorumlarList = new ArrayList<>();
-//                for (Yorumlar newYorum : newYorumlar.getYorumlar()) {
-//                    Yorumlar yorumlar;
-//                    if (newYorum.getId() != null) {
-//                        yorumlar = yorumlarService.getYorumById(newYorum.getId());
-//                    } else {
-//                        yorumlar = new Yorumlar();
-//                    }
-//                    yorumlar.setYorumlarYorum(newYorum.getYorumlarYorum());
-//                    yorumlar.setYorumlarIsim(newYorum.getYorumlarIsim());
-//                    yorumlar.setYorumlarEmail(newYorum.getYorumlarEmail());
-//                    yorumlarService.CreateYorumlar(yorumlar);
-//                    updatedYorumlarList.add(yorumlar);
-//                }
-//                oldYorum.setYorumlar(updatedYorumlarList);
-//            }
-//
-//            oldYorum.setYorumlar(newYorumlar.getYorumlar());
-//
-//            carService.createCar(oldYorum);
+            if (newYorumlar.getCar() != null) {
+                oldYorum.setCar(newYorumlar.getCar());
+                Car car = carService.getCarByID(newYorumlar.getCar().getId());
+                car.getYorumlar().add(newYorumlar);
+                carService.createCar(car);
+            }else
+                return null;
+            }
+
             return new ResponseEntity<>(oldYorum, HttpStatus.OK);
         }
-//        return new ResponseEntity<Yorumlar>();@DeleteMapping("/{id}")
-//    public String deleteYorum(@PathVariable Integer id) {
-//        return "yorumlarService()";
-//    }
-//
-//    private Car getCarById(Integer id) {
-//        return carService.getCarByID(id);
-//    }
-//
-//    public CarService getCarService() {
-//        return carService;
-//    }
+
+    @DeleteMapping("/{id}")
+    public String deleteYorum(@PathVariable Integer id) {
+        return "yorumlarService()";
+    }
+
+    private Car getCarById(Integer id) {
+        return carService.getCarByID(id);
+    }
+
+    public CarService getCarService() {
+        return carService;
+    }
 
     }
 
