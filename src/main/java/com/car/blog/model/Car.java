@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import java.util.List;
 
@@ -31,12 +32,11 @@ public class Car {
     @Column(length = 65535)
     private String görseller;
 
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<SocialMedia> socialMediaList;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "social_media_id")
-    private SocialMedia socialMedia;
-
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Yorumlar> yorumlar;
 }

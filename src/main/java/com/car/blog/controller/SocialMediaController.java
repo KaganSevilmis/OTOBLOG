@@ -1,112 +1,61 @@
 package com.car.blog.controller;
 
-import com.car.blog.model.Car;
 import com.car.blog.model.SocialMedia;
-import com.car.blog.model.Yorumlar;
-import com.car.blog.service.CarService;
 import com.car.blog.service.SocialMediaService;
-import com.car.blog.service.YorumlarService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
-
-
+import java.util.Optional;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping("/socialmedia")
+@RequestMapping("/socialMedia")
 public class SocialMediaController {
 
-    private final CarService carService;
-    private final SocialMediaService socialMediaService;
-    private final YorumlarService yorumlarService;
-
+    @Autowired
+    private SocialMediaService socialMediaService;
 
     @GetMapping
-    public ResponseEntity<List<SocialMedia>> getCars() {
-        return new ResponseEntity<>(socialMediaService.getSocialMedia(), OK);
+    public ResponseEntity<List<SocialMedia>> getAllSocialMedia() {
+        List<SocialMedia> socialMediaList = socialMediaService.getSocialMedia();
+        return ResponseEntity.ok(socialMediaList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCar(@PathVariable Integer id) {
-        return new ResponseEntity<>(getCarById(id), OK);
-
-
+    public ResponseEntity<SocialMedia> getSocialMediaById(@PathVariable Integer id) {
+        SocialMedia optionalSocialMedia = socialMediaService.getSocialMediaById(id);
+        return new ResponseEntity<>(optionalSocialMedia, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Car> createCar(@RequestBody Car newCar) {
-        return new ResponseEntity<>(carService.createCar(newCar), CREATED);
+    public ResponseEntity<SocialMedia> createSocialMedia(@RequestBody SocialMedia socialMedia) {
+        SocialMedia createdSocialMedia = socialMediaService.CreateSocialMedia(socialMedia);
+        return new ResponseEntity<>(createdSocialMedia, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCar(@PathVariable Integer id, @RequestBody Car newCar) {
-        Car oldCar = carService.getCarByID(id);
-        if (oldCar != null) {
-            oldCar.setIçerik(newCar.getIçerik());
-            oldCar.setCreateDate(newCar.getCreateDate());
-            oldCar.setBaşlıklar(newCar.getBaşlıklar());
-            oldCar.setGörseller(newCar.getGörseller());
-
-            // Control for null value in socialMedia
-            if (newCar.getSocialMedia() != null) {
-
-                  SocialMedia socialMedia = socialMediaService.getSocialMediaById(id);
-                  socialMedia.setSocialMediaLogo(newCar.getSocialMedia().getSocialMediaLogo());
-                  socialMedia.setSocialMediaName(newCar.getSocialMedia().getSocialMediaName());
-                  socialMedia.setSocialMediaLink(newCar.getSocialMedia().getSocialMediaLink());
-                oldCar.setSocialMedia(newCar.getSocialMedia());
-            }
-            if (newCar.getYorumlar() != null) {
-                List<Yorumlar> updatedYorumlarList = new ArrayList<>();
-                for (Yorumlar newYorum : newCar.getYorumlar()) {
-                    Yorumlar yorumlar;
-                    if (newYorum.getId() != null) {
-                        yorumlar = yorumlarService.getYorumById(newYorum.getId());
-                    } else {
-                        yorumlar = new Yorumlar();
-                    }
-                    yorumlar.setYorumlarYorum(newYorum.getYorumlarYorum());
-                    yorumlar.setYorumlarIsim(newYorum.getYorumlarIsim());
-                    yorumlar.setYorumlarEmail(newYorum.getYorumlarEmail());
-                    yorumlarService.CreateYorumlar(yorumlar);
-                    updatedYorumlarList.add(yorumlar);
-                }
-                oldCar.setYorumlar(updatedYorumlarList);
-            }
-
-            oldCar.setYorumlar(newCar.getYorumlar());
-            carService.createCar(oldCar);
-            return new ResponseEntity<>(oldCar, HttpStatus.OK);
+    public ResponseEntity<SocialMedia> updateSocialMedia(@PathVariable Integer id, @RequestBody SocialMedia socialMedia) {
+        SocialMedia optionalOldSocialMedia = socialMediaService.getSocialMediaById(id);
+        if (optionalOldSocialMedia != null) {
+            SocialMedia oldSocialMedia = optionalOldSocialMedia;
+            oldSocialMedia.setSocialMediaLogo(socialMedia.getSocialMediaLogo());
+            oldSocialMedia.setSocialMediaName(socialMedia.getSocialMediaName());
+            oldSocialMedia.setSocialMediaLink(socialMedia.getSocialMediaLink());
+            SocialMedia updatedSocialMedia = socialMediaService.CreateSocialMedia(oldSocialMedia); // Bu metodu yeniden adlandırmayı düşünün
+            return ResponseEntity.ok(updatedSocialMedia);
         }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return ResponseEntity.notFound().build();
     }
-
 
     @DeleteMapping("/{id}")
-    public String deleteCar(@PathVariable Integer id) {
-        return carService.deleteCar(id);
-
-    }
-
-
-    private Car getCarById(Integer id){
-        return carService.getCarByID(id);
-
-    }
-
-    public CarService getCarService() {
-        return carService;
+    public ResponseEntity<Void> deleteSocialMedia(@PathVariable Integer id) {
+        SocialMedia optionalSocialMedia = socialMediaService.getSocialMediaById(id);
+        if (optionalSocialMedia != null) {
+            socialMediaService.deletesocialMedia(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
-
-
-

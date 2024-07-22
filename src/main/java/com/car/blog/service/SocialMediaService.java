@@ -21,7 +21,7 @@ public class SocialMediaService {
         return socialMediaRepository.save(newSocialMedia);
     }
 
-    public void deleteIl(Integer id) {
+    public void deletesocialMedia(Integer id) {
         socialMediaRepository.deleteById(id);
     }
 

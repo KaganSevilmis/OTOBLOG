@@ -53,30 +53,37 @@ public class CarController {
             oldCar.setCreateDate(newCar.getCreateDate());
             oldCar.setBaşlıklar(newCar.getBaşlıklar());
             oldCar.setGörseller(newCar.getGörseller());
-
-            // Sosyal medyayı güncelle
-            if (oldCar.getSocialMedia() != null) {
-                Integer socialMediaId = oldCar.getSocialMedia().getId();
-                if (socialMediaId != null) {
-                    SocialMedia socialMedia = socialMediaService.getSocialMediaById(socialMediaId);
-                    socialMedia.setSocialMediaLogo(newCar.getSocialMedia().getSocialMediaLogo());
-                    socialMedia.setSocialMediaName(newCar.getSocialMedia().getSocialMediaName());
-                    socialMedia.setSocialMediaLink(newCar.getSocialMedia().getSocialMediaLink());
+                  // Sosyal medyayı güncelle
+            if (!oldCar.getSocialMediaList().isEmpty()) {
+                List<SocialMedia> updatedSocialMediaList = new ArrayList<>();
+                for (SocialMedia newSocialMedia : newCar.getSocialMediaList()) {
+                    SocialMedia socialMedia;
+                    if (newSocialMedia.getId() != null) {
+                        socialMedia = socialMediaService.getSocialMediaById(newSocialMedia.getId());
+                    } else {
+                        socialMedia = new SocialMedia();
+                    }
+                    socialMedia.setSocialMediaLogo(newSocialMedia.getSocialMediaLogo());
+                    socialMedia.setSocialMediaName(newSocialMedia.getSocialMediaName());
+                    socialMedia.setSocialMediaLink(newSocialMedia.getSocialMediaLink());
                     socialMediaService.CreateSocialMedia(socialMedia);
-                    oldCar.setSocialMedia(socialMedia);
-                } else {
-                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                    updatedSocialMediaList.add(socialMedia);
                 }
-            }else{
-                SocialMedia socialMedia = new SocialMedia();
+                oldCar.setSocialMediaList(updatedSocialMediaList);
+            } else {
+                List<SocialMedia> updatedSocialMediaList = new ArrayList<>();
+                for (SocialMedia newSocialMedia : newCar.getSocialMediaList()) {
+                    SocialMedia socialMedia = new SocialMedia();
 
-                socialMedia.setSocialMediaName(newCar.getSocialMedia().getSocialMediaName());
-                socialMedia.setSocialMediaLogo(newCar.getSocialMedia().getSocialMediaLogo());
-                socialMedia.setSocialMediaLink(newCar.getSocialMedia().getSocialMediaLink());
-                socialMediaService.CreateSocialMedia(socialMedia);
-                oldCar.setSocialMedia(socialMedia);
+                    socialMedia.setSocialMediaLogo(newSocialMedia.getSocialMediaLogo());
+                    socialMedia.setSocialMediaName(newSocialMedia.getSocialMediaName());
+                    socialMedia.setSocialMediaLink(newSocialMedia.getSocialMediaLink());
+                    socialMedia.setCar(oldCar);
+                    socialMediaService.CreateSocialMedia(socialMedia);
+                    updatedSocialMediaList.add(socialMedia);
+                }
+                oldCar.setSocialMediaList(updatedSocialMediaList);
             }
-
             // Yorumları güncelle
             if (!oldCar.getYorumlar().isEmpty()) {
                 List<Yorumlar> updatedYorumlarList = new ArrayList<>();
