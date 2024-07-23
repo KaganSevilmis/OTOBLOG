@@ -26,12 +26,14 @@ public class Car {
     @Column(length = 65535)
     private String içerik;
 
-    @Column(length = 65535)
-    private String başlıklar;
+    @ElementCollection
+    @CollectionTable(name = "car_titles", joinColumns = @JoinColumn(name = "car_id"))
+    @Column(name = "title", length = 65535) // Uzunluk ihtiyaca göre ayarlanabilir
+    private List<String> başlıklar;
 
     @ElementCollection
     @CollectionTable(name = "car_images", joinColumns = @JoinColumn(name = "car_id"))
-    @Column(name = "image_url")
+    @Column(name = "image_url" , length = 65535)
     private List<String> görseller; // Görseller URL'leri bir liste olarak saklanacak
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

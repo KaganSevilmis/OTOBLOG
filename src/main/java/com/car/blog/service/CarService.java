@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,10 +22,6 @@ public class CarService {
         return carRepository.save(newCar);
     }
 
-    public void deleteIl(Integer id) {
-        carRepository.deleteById(id);
-    }
-
     public Car getCarByID(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("ID cannot be null");
@@ -35,10 +32,28 @@ public class CarService {
 
     public String deleteCar(Integer id) {
         try {
-            carRepository.deleteById(id);
-            return "Car deleted";
+            // Varlık mevcut mu kontrol et
+            Optional<Car> carOptional = carRepository.findById(id);
+            if (carOptional.isPresent()) {
+                carRepository.deleteById(id);
+                return "Car deleted";
+            } else {
+                return "Car not found";
+            }
         } catch (Exception e) {
-            return "Error occurred while deleting the car";
+            throw new RuntimeException("Error occurred while deleting the car: " + e.getMessage());
         }
+    }
+
+    public Car updateCar(Car car) {
+        if (car == null || car.getId() == null) {
+            throw new IllegalArgumentException("Car or Car ID cannot be null");
+        }
+        // Mevcut araba olup olmadığını kontrol et
+        if (!carRepository.existsById(car.getId())) {
+            throw new RuntimeException("Car not found");
+        }
+        // Güncellenmiş arabayı kaydet
+        return carRepository.save(car);
     }
 }
