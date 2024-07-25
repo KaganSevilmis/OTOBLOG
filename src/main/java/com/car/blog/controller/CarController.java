@@ -68,7 +68,7 @@ public class CarController {
 
             // Sosyal medya güncellemeleri
             List<SocialMedia> updatedSocialMediaList = new ArrayList<>();
-            if (newCar.getSocialMediaList() != null) {
+            if (!newCar.getSocialMediaList().isEmpty()) {
                 for (SocialMedia newSocialMedia : newCar.getSocialMediaList()) {
                     SocialMedia socialMedia = newSocialMedia.getId() != null ?
                             socialMediaService.getSocialMediaById(newSocialMedia.getId()) : new SocialMedia();
