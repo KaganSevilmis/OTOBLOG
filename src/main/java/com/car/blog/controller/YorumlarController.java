@@ -39,7 +39,7 @@ public class YorumlarController {
 
     @PostMapping
     public ResponseEntity<Yorumlar> createCar(@RequestBody Yorumlar newYorumlar) {
-        return new ResponseEntity<>(yorumlarService.CreateYorumlar(newYorumlar), CREATED);
+        return new ResponseEntity<>(yorumlarService.createYorumlar(newYorumlar), CREATED);
     }
 
     @PutMapping("/{id}")

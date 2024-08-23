@@ -61,6 +61,7 @@ public class CarController {
             if (newCar.getBaşlıklar() != null) {
                 oldCar.setBaşlıklar(newCar.getBaşlıklar());
             }
+
             // Görselleri güncelle
             if (newCar.getGörseller() != null) {
                 oldCar.setGörseller(newCar.getGörseller());
@@ -106,8 +107,6 @@ public class CarController {
             return new ResponseEntity<>("An error occurred while updating the car: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCar(@PathVariable Integer id) {

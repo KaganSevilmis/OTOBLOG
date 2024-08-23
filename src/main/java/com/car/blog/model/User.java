@@ -2,33 +2,26 @@ package com.car.blog.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
-    @Data
-    @Entity
-    @Table(name = "users")
-    public class User {
+@Data
+@Entity
+@Table(name = "user")
+public class User {
 
-        @jakarta.persistence.Id
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @jakarta.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @Column(name = "username")
-        private String username;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 
-        @Column(name = "email")
-        private String email;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        // getter ve setter'lar
-    }
+    @Column(name = "password", nullable = false)
+    private String password;
 
 
+
+    // getter ve setter'lar Lombok tarafından otomatik oluşturulur
+}
