@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "app_user")  // Tablonun adı 'app_user' olarak değiştirildi
 public class User {
 
     @jakarta.persistence.Id
@@ -20,8 +20,6 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-
 
     // getter ve setter'lar Lombok tarafından otomatik oluşturulur
 }
